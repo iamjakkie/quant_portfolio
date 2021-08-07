@@ -4,7 +4,7 @@ import hmac
 import hashlib
 import requests
 
-class KucoinAuthenticator:
+class KucoinAuthenticator(Authenticator):
     def __init__(self, api_key: str, api_secret: str, api_passphrase: str):
         self.api_key = api_key
         self.api_secret = api_secret
