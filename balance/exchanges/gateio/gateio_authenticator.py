@@ -1,6 +1,6 @@
-from base_model.authenticator import Authenticator
+from quant_earnings.base_model.authenticator import Authenticator
 
-def GateioAuthenticator():
+def GateioAuthenticator(Authenticator):
     def __init__(self, api_key: str, secret_key: str):
         self.api_key = api_key
         self.secret_key = secret_key

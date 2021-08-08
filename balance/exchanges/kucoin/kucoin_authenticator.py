@@ -4,6 +4,8 @@ import hmac
 import hashlib
 import requests
 
+#from quant_earnings.base_model.authenticator import Authenticator
+import Authenticator
 class KucoinAuthenticator(Authenticator):
     def __init__(self, api_key: str, api_secret: str, api_passphrase: str):
         self.api_key = api_key
