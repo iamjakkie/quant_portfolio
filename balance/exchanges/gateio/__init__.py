@@ -9,5 +9,4 @@ with open('/workspaces/quant_earnings/balance/exchanges/gateio/credentials.txt',
 
 auth = GateioAuthenticator(credentials['api_key'], credentials['api_secret'])
 gateio_connector = GateioConnector(auth)
-res = gateio_connector.get_balance()
-print(res)
+gateio_connector.get_balance()
