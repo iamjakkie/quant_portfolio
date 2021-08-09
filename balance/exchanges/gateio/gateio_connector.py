@@ -16,8 +16,9 @@ class GateioConnector(Connector):
             # TODO proper error handling
             raise "error"
         rows = response.json()
+        ts = pd.Timestamp.utcnow().replace(second=0, microsecond=0)
         for row in rows:
-            unit = BalanceUnit('Gateio', row['currency'], pd.Timestamp.utcnow().replace(minute=0, second=0, microsecond=0), row['available'])
+            unit = BalanceUnit('Gateio', row['currency'], ts, row['available'])
             print(unit)
         
     
