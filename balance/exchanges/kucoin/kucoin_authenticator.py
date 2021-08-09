@@ -2,7 +2,6 @@ import time
 import base64
 import hmac
 import hashlib
-import requests
 
 from base_model.authenticator import Authenticator
 
@@ -13,7 +12,6 @@ class KucoinAuthenticator(Authenticator):
         self.api_passphrase = api_passphrase
 
     def authenticate(self):
-        url = 'https://api.kucoin.com/api/v1/accounts'
         now = int(time.time() * 1000)
         str_to_sign = str(now) + 'GET' + '/api/v1/accounts'
         signature = base64.b64encode(
@@ -26,6 +24,4 @@ class KucoinAuthenticator(Authenticator):
             "KC-API-PASSPHRASE": passphrase,
             "KC-API-KEY-VERSION": "2"
         }
-        response = requests.request('get', url, headers=headers)
-        print(response.status_code)
-        return response.json()
+        return headers

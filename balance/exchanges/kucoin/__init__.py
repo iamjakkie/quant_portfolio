@@ -8,5 +8,5 @@ with open('/workspaces/quant_earnings/balance/exchanges/kucoin/credentials.txt',
         credentials[key] = value.replace('\n', '')
 
 auth = KucoinAuthenticator(credentials['api_key'], credentials['api_secret'], credentials['api_passphrase'])
-res = auth.authenticate()
-print(res)
+kucoin_connector = KucoinConnector(auth)
+kucoin_connector.get_balance()
