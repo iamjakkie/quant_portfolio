@@ -11,14 +11,20 @@ class KucoinConnector(Connector):
 
     async def get_balance(self):
         url = 'https://api.kucoin.com/api/v1/accounts'
-        response = requests.request('GET', url, headers=self.headers)
+        response = await requests.request('GET', url, headers=self.headers)
         if response.status_code != 200:
             # TODO proper error handling
             raise "error"
         rows = response.json()['data']
         ts = pd.Timestamp.utcnow().replace(second=0, microsecond=0)
+        self.balance_list = []
         for row in rows:
             if row['type'] == 'trade':
                 unit = BalanceUnit('Kucoin', row['currency'], ts, row['balance'])
-                print(unit)
+                self.balance_list.append(unit)
+
+        return self.balance_list
+
+    def get_currencies(self):
+        return [unit.currency for unit in self.balance_list]
         
