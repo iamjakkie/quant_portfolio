@@ -1,3 +1,5 @@
+import asyncio
+
 from kucoin_connector import KucoinConnector
 from kucoin_authenticator import KucoinAuthenticator
 
@@ -10,4 +12,5 @@ with open('/workspaces/quant_earnings/balance/exchanges/kucoin/credentials.txt',
 auth = KucoinAuthenticator(credentials['api_key'], credentials['api_secret'], credentials['api_passphrase'])
 kucoin_connector = KucoinConnector(auth)
 kucoin_connector.get_balance()
+asyncio.get_event_loop().run_until_complete(kucoin_connector.get_balance())
 print(kucoin_connector.balance_list)

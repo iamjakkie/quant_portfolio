@@ -1,5 +1,7 @@
 import requests
 import pandas as pd
+import asyncio
+import aiohttp
 from decimal import Decimal
 
 from kucoin_authenticator import KucoinAuthenticator
@@ -11,17 +13,19 @@ class KucoinConnector(Connector):
 
     async def get_balance(self):
         url = 'https://api.kucoin.com/api/v1/accounts'
-        response = await requests.request('GET', url, headers=self.headers)
-        if response.status_code != 200:
+        async with aiohttp.ClientSession() as client:
+            resp = await client.get(url, headers=self.headers)
+            resp_json = await resp.json()
+        if resp.status != 200:
             # TODO proper error handling
             raise "error"
-        rows = response.json()['data']
+        rows = resp_json['data']
         ts = pd.Timestamp.utcnow().replace(second=0, microsecond=0)
         self.balance_list = []
         for row in rows:
             if row['type'] == 'trade':
-                unit = BalanceUnit('Kucoin', row['currency'], ts, row['balance'])
-                self.balance_list.append(unit)
+                unit = BalanceUnit('Kucoin', ts, row['currency'], row['balance'])
+                self.balance_list.append(unit.currency)
 
         return self.balance_list
 

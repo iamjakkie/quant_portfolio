@@ -18,10 +18,10 @@ class KucoinAuthenticator(Authenticator):
             hmac.new(self.api_secret.encode('utf-8'), str_to_sign.encode('utf-8'), hashlib.sha256).digest())
         passphrase = base64.b64encode(hmac.new(self.api_secret.encode('utf-8'), self.api_passphrase.encode('utf-8'), hashlib.sha256).digest())
         headers = {
-            "KC-API-SIGN": signature,
+            "KC-API-SIGN": str(signature, 'utf-8'),
             "KC-API-TIMESTAMP": str(now),
             "KC-API-KEY": self.api_key,
-            "KC-API-PASSPHRASE": passphrase,
+            "KC-API-PASSPHRASE": str(passphrase, 'utf-8'),
             "KC-API-KEY-VERSION": "2"
         }
         return headers
