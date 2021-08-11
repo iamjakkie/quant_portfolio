@@ -1,9 +1,7 @@
 import asyncio
-import aiohttp
 
 from gateio_authenticator import GateioAuthenticator
 from gateio_connector import GateioConnector
-
 
 
 def main():
@@ -19,9 +17,9 @@ def main():
     asyncio.get_event_loop().run_until_complete(gateio_connector.get_balance())
     print(gateio_connector.balance_list)
     
-    async with aiohttp.ClientSession() as client:
-            header = self._kucoin_auth.add_auth_to_params("POST", KUCOIN_USER_STREAM_ENDPOINT)
-            async with client.post(f"{KUCOIN_API_ENDPOINT}{KUCOIN_USER_STREAM_ENDPOINT}", headers=header) as response:
-                response: aiohttp.ClientResponse = response
+    # async with aiohttp.ClientSession() as client:
+    #         header = self._kucoin_auth.add_auth_to_params("POST", KUCOIN_USER_STREAM_ENDPOINT)
+    #         async with client.post(f"{KUCOIN_API_ENDPOINT}{KUCOIN_USER_STREAM_ENDPOINT}", headers=header) as response:
+    #             response: aiohttp.ClientResponse = response
 if __name__ == '__main__':
     main()
