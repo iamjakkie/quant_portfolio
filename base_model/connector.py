@@ -11,6 +11,18 @@ class Connector(ABC):
     def get_balance():
         pass
 
+    @abstractmethod
+    def get_currencies():
+        pass
+
+    @abstractmethod
+    def subscribe_ws():
+        pass
+
+    @abstractmethod
+    def get_value():
+        pass
+
 @dataclass
 class BalanceUnit(ABC):
     exchange: str

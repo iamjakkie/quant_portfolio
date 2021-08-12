@@ -31,4 +31,7 @@ class KucoinConnector(Connector):
 
     def get_currencies(self):
         return [unit.currency for unit in self.balance_list]
+
+    def subscribe_ws(self):
+        
         
