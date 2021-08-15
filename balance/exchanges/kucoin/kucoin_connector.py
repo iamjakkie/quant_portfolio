@@ -21,17 +21,22 @@ class KucoinConnector(Connector):
             raise "error"
         rows = resp_json['data']
         ts = pd.Timestamp.utcnow().replace(second=0, microsecond=0)
-        self.balance_list = []
+        self.balance_list = set()
         for row in rows:
             if row['type'] == 'trade':
                 unit = BalanceUnit('Kucoin', ts, row['currency'], row['balance'])
-                self.balance_list.append(unit.currency)
+                self.balance_list.add(unit.currency)
 
         return self.balance_list
 
     def get_currencies(self):
-        return [unit.currency for unit in self.balance_list]
+        print(type({unit.currency for unit in self.balance_list}))
+        return {unit.currency for unit in self.balance_list}
 
     def subscribe_ws(self):
-        
+        pass
+
+    def get_value(self):
+        pass
+
         

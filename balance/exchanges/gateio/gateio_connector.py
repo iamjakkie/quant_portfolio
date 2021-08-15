@@ -29,6 +29,6 @@ class GateioConnector(Connector):
             self.balance_list.append(unit.currency)
         
     def get_currencies(self):
-        return [unit.currency for unit in self.balance_list]
+        return {unit.currency for unit in self.balance_list}
 
 
