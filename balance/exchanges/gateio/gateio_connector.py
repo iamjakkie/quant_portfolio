@@ -2,6 +2,7 @@ import requests
 import pandas as pd 
 import asyncio
 import aiohttp
+import websockets
 
 from gateio_authenticator import GateioAuthenticator
 from base_model.connector import Connector, BalanceUnit

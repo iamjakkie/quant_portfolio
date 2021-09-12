@@ -2,6 +2,7 @@ import requests
 import pandas as pd
 import asyncio
 import aiohttp
+import websockets
 from decimal import Decimal
 
 from kucoin_authenticator import KucoinAuthenticator
