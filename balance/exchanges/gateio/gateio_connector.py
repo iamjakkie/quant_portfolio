@@ -33,3 +33,8 @@ class GateioConnector(Connector):
         return {unit.currency for unit in self.balance_list}
 
 
+    def subscribe_ws(self):
+        pass
+
+    def get_value(self):
+        pass
