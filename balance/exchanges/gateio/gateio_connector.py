@@ -3,7 +3,10 @@ import pandas as pd
 import asyncio
 import aiohttp
 import websockets
+import time
+import json
 
+from websocket import create_connection
 from gateio_authenticator import GateioAuthenticator
 from base_model.connector import Connector, BalanceUnit
 
@@ -33,8 +36,16 @@ class GateioConnector(Connector):
         return {unit.currency for unit in self.balance_list}
 
 
-    def subscribe_ws(self):
-        pass
+    def subscribe_ws(self) -> websockets.WebSocketClientProtocol:
+        ws = create_connection("wss://api.gateio.ws/ws/v4/")
+        request = {
+            "time": int(time.time()),
+            "channel": "spot.balances",
+            "event": "subscribe",  # "unsubscribe" for unsubscription
+        }
+        request['auth'] = self.headers
+        ws.send(json.dumps(request))
+        print(ws.recv())
 
     def get_value(self):
         pass

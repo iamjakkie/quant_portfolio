@@ -1,9 +1,12 @@
+import websockets
 import pandas as pd
 
+from abc import ABC, abstractmethod
 from dataclasses import dataclass
 from decimal import Decimal
 
-from abc import ABC, abstractmethod
+
+
 
 class Connector(ABC):
     
@@ -16,7 +19,7 @@ class Connector(ABC):
         pass
 
     @abstractmethod
-    def subscribe_ws():
+    def subscribe_ws() -> websockets.WebSocketClientProtocol:
         pass
 
     @abstractmethod
