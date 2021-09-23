@@ -6,14 +6,18 @@ import websockets
 import time
 import json
 
-from websocket import create_connection
 from gateio_authenticator import GateioAuthenticator
 from base_model.connector import Connector, BalanceUnit
 
+WS_URL = "wss://api.gateio.ws/ws/v4/"
+
 class GateioConnector(Connector):
     def __init__(self, auth: GateioAuthenticator):
+        self._auth = auth
         self.headers = auth.authenticate()
         self.balance_list = []
+        self.currencies = None
+        self._ws = None
 
     async def get_balance(self):
         host = "https://api.gateio.ws"
@@ -33,19 +37,30 @@ class GateioConnector(Connector):
             self.balance_list.append(unit.currency)
         
     def get_currencies(self):
-        return {unit.currency for unit in self.balance_list}
+        self.currencies = {unit.currency for unit in self.balance_list}
 
 
-    def subscribe_ws(self) -> websockets.WebSocketClientProtocol:
-        ws = create_connection("wss://api.gateio.ws/ws/v4/")
-        request = {
+    async def subscribe_ws(self):
+        self._ws = await websockets.connect(WS_URL)
+        params = {
             "time": int(time.time()),
             "channel": "spot.balances",
-            "event": "subscribe",  # "unsubscribe" for unsubscription
+            "event": "subscribe",
         }
-        request['auth'] = self.headers
-        ws.send(json.dumps(request))
-        print(ws.recv())
+        if self.currencies:
+            params["payload"] = list(self.currencies) 
+        params['auth'] = self._auth.gen_sign(params['channel'], params['event'], params['time'])
+        await self._ws.send(json.dumps(params))
+        
+        if res['result']['status'] == 'success':
+            while True:
+                try:
+                    res = await self._ws.recv()
+                    pass
+                except:
+                    return
+                finally:
+                    pass
 
     def get_value(self):
         pass

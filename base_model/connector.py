@@ -19,7 +19,7 @@ class Connector(ABC):
         pass
 
     @abstractmethod
-    def subscribe_ws() -> websockets.WebSocketClientProtocol:
+    async def subscribe_ws() -> websockets.WebSocketClientProtocol:
         pass
 
     @abstractmethod

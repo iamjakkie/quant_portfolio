@@ -25,3 +25,7 @@ class GateioAuthenticator(Authenticator):
         headers.update(sign_headers)
         return headers
         
+    def gen_sign(self, channel, event, timestamp):
+        s = 'channel=%s&event=%s&time=%d' % (channel, event, timestamp)
+        sign = hmac.new(self.secret_key.encode('utf-8'), s.encode('utf-8'), hashlib.sha512).hexdigest()
+        return {'method': 'api_key', 'KEY': self.api_key, 'SIGN': sign}
