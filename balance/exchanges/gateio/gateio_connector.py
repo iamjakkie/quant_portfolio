@@ -10,6 +10,7 @@ from gateio_authenticator import GateioAuthenticator
 from base_model.connector import Connector, BalanceUnit
 
 WS_URL = "wss://api.gateio.ws/ws/v4/"
+SKIP_CURRENCIES = ['USDT']
 
 class GateioConnector(Connector):
     def __init__(self, auth: GateioAuthenticator):
@@ -44,23 +45,45 @@ class GateioConnector(Connector):
         self._ws = await websockets.connect(WS_URL)
         params = {
             "time": int(time.time()),
-            "channel": "spot.balances",
+            "channel": "spot.tickers",
             "event": "subscribe",
+            "payload": [currency+"_USDT" for currency in self.balance_list if currency not in SKIP_CURRENCIES]
         }
-        if self.currencies:
-            params["payload"] = list(self.currencies) 
-        params['auth'] = self._auth.gen_sign(params['channel'], params['event'], params['time'])
+        # params['auth'] = self._auth.gen_sign(params['channel'], params['event'], params['time'])
+        print(params)
         await self._ws.send(json.dumps(params))
         
-        if res['result']['status'] == 'success':
-            while True:
+        while True:
+            try:
+                res = await asyncio.wait_for(self._ws.recv(), 30.)
                 try:
-                    res = await self._ws.recv()
-                    pass
-                except:
-                    return
-                finally:
-                    pass
+                    msg = json.loads(res)
+
+                    # API errors
+                    if msg.get('error', None) is not None:
+                        error = msg.get('error', {}).get('message', msg['error'])
+                        print(error)
+                    
+                    # subscribe/unsubscribe
+                    event = msg.get('event')
+                    if event == 'subscribe':
+                        status = msg.get('result', {}).get('status')
+                        if status == 'success':
+                            print('Subscribed successfully')
+                        yield None
+                    elif event == 'unsubscribe':
+                        status = msg.get('result', {}).get('status')
+                        if status == 'success':
+                            print('Unsubscribed successfully')
+                        yield None
+                    else:
+                        yield msg
+                except ValueError:
+                    continue
+            except asyncio.TimeoutError:
+                await asyncio.wait_for(self._ws.ping(), 10.)
+            finally:
+                pass
 
     def get_value(self):
         pass
