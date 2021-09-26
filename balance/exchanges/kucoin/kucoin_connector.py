@@ -35,7 +35,48 @@ class KucoinConnector(Connector):
         return {unit.currency for unit in self.balance_list}
 
     def subscribe_ws(self):
-        pass
+        self._ws = await websockets.connect(WS_URL)
+        params = {
+            "time": int(time.time()),
+            "channel": "spot.tickers",
+            "event": "subscribe",
+            "payload": [currency+"_USDT" for currency in self.balance_list if currency not in SKIP_CURRENCIES]
+        }
+        # params['auth'] = self._auth.gen_sign(params['channel'], params['event'], params['time'])
+        print(params)
+        await self._ws.send(json.dumps(params))
+        
+        while True:
+            try:
+                res = await asyncio.wait_for(self._ws.recv(), 30.)
+                try:
+                    msg = json.loads(res)
+
+                    # API errors
+                    if msg.get('error', None) is not None:
+                        error = msg.get('error', {}).get('message', msg['error'])
+                        print(error)
+                    
+                    # subscribe/unsubscribe
+                    event = msg.get('event')
+                    if event == 'subscribe':
+                        status = msg.get('result', {}).get('status')
+                        if status == 'success':
+                            print('Subscribed successfully')
+                        yield None
+                    elif event == 'unsubscribe':
+                        status = msg.get('result', {}).get('status')
+                        if status == 'success':
+                            print('Unsubscribed successfully')
+                        yield None
+                    else:
+                        yield msg
+                except ValueError:
+                    continue
+            except asyncio.TimeoutError:
+                await asyncio.wait_for(self._ws.ping(), 10.)
+            finally:
+                pass
 
     def get_value(self):
         pass
