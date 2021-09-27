@@ -38,6 +38,9 @@ class GateioConnector(Connector):
             self.currencies.append(unit.currency)
             self.balances[unit.currency] = float(unit.balance)
 
+    async def get_historical_trades(self):
+        pass
+
     def get_currencies(self):
         pass
 
