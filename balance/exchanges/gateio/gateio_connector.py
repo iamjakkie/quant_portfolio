@@ -39,8 +39,24 @@ class GateioConnector(Connector):
             self.balances[unit.currency] = float(unit.balance)
 
     async def get_historical_trades(self):
-        pass
-
+        host = "https://api.gateio.ws"
+        url = '/api/v4/spot/my_trades'
+        for currency in self.currencies:
+            query_param = 'currency_pair={}_USDT'.format(currency)
+            async with aiohttp.ClientSession() as client:
+                headers = {'Accept': 'application/json', 
+                        'Content-Type': 'application/json'}
+                sign_headers = self._auth.gen_sign('GET', host + url, query_param)
+                headers.update(sign_headers)
+                resp = await client.get(host+url, headers=self.headers)
+                resp_json = await resp.json()
+            #response = await requests.request('GET', host + url, headers=self.headers)
+            if resp.status != 200:
+                # TODO proper error handling
+                raise "error"
+            for row in resp_json:
+                print(row)
+        
     def get_currencies(self):
         pass
 
