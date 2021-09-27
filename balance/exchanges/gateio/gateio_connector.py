@@ -16,8 +16,8 @@ class GateioConnector(Connector):
     def __init__(self, auth: GateioAuthenticator):
         self._auth = auth
         self.headers = auth.authenticate()
-        self.balance_list = []
-        self.currencies = None
+        self.balances = {}
+        self.currencies = []
         self._ws = None
 
     async def get_balance(self):
@@ -32,13 +32,14 @@ class GateioConnector(Connector):
             raise "error"
         #rows = response.json()
         ts = pd.Timestamp.utcnow().replace(second=0, microsecond=0)
-        self.balance_list = []
+        self.currencies = []
         for row in resp_json:
             unit = BalanceUnit('Gateio', ts, row['currency'], row['available'])
-            self.balance_list.append(unit.currency)
-        
+            self.currencies.append(unit.currency)
+            self.balances[unit.currency] = float(unit.balance)
+
     def get_currencies(self):
-        self.currencies = {unit.currency for unit in self.balance_list}
+        pass
 
 
     async def subscribe_ws(self):
@@ -47,7 +48,7 @@ class GateioConnector(Connector):
             "time": int(time.time()),
             "channel": "spot.tickers",
             "event": "subscribe",
-            "payload": [currency+"_USDT" for currency in self.balance_list if currency not in SKIP_CURRENCIES]
+            "payload": [currency+"_USDT" for currency in self.currencies if currency not in SKIP_CURRENCIES]
         }
         # params['auth'] = self._auth.gen_sign(params['channel'], params['event'], params['time'])
         print(params)
@@ -77,7 +78,12 @@ class GateioConnector(Connector):
                             print('Unsubscribed successfully')
                         yield None
                     else:
-                        yield msg
+                        try:
+                            currency = msg['result']['currency_pair'].replace('_USDT','')
+                            balance = float(msg['result']['last'])*self.balances[currency]
+                            self.balances[currency] = balance
+                        except Exception as e:
+                            print(e)
                 except ValueError:
                     continue
             except asyncio.TimeoutError:

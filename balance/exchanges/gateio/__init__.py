@@ -16,7 +16,7 @@ async def main():
     gateio_connector = GateioConnector(auth)
     await gateio_connector.get_balance()
     # asyncio.get_event_loop().run_until_complete(gateio_connector.subscribe_ws())
-    print(gateio_connector.balance_list)
+    print(gateio_connector.currencies)
     async for i in gateio_connector.subscribe_ws():
         print(i)
     # async with aiohttp.ClientSession() as client:
