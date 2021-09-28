@@ -25,7 +25,11 @@ class GateioAuthenticator(Authenticator):
         headers.update(sign_headers)
         return headers
         
-    def gen_sign(self, channel, event, timestamp):
-        s = 'channel=%s&event=%s&time=%d' % (channel, event, timestamp)
+    def gen_sign(self, method, url, query_string=None, payload_string=None):
+        t = time.time()
+        m = hashlib.sha512()
+        m.update((payload_string or "").encode('utf-8'))
+        hashed_payload = m.hexdigest()
+        s = '%s\n%s\n%s\n%s\n%s' % (method, url, query_string or "", hashed_payload, t)
         sign = hmac.new(self.secret_key.encode('utf-8'), s.encode('utf-8'), hashlib.sha512).hexdigest()
-        return {'method': 'api_key', 'KEY': self.api_key, 'SIGN': sign}
+        return {'KEY': self.api_key, 'Timestamp': str(t), 'SIGN': sign}

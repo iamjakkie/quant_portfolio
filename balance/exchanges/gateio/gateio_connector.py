@@ -43,13 +43,15 @@ class GateioConnector(Connector):
         url = '/api/v4/spot/my_trades'
         for currency in self.currencies:
             query_param = 'currency_pair={}_USDT'.format(currency)
+            print(query_param)
             async with aiohttp.ClientSession() as client:
                 headers = {'Accept': 'application/json', 
                         'Content-Type': 'application/json'}
                 sign_headers = self._auth.gen_sign('GET', host + url, query_param)
                 headers.update(sign_headers)
-                resp = await client.get(host+url, headers=self.headers)
+                resp = await client.get(host + url + "?" + query_param, headers=headers)
                 resp_json = await resp.json()
+                print(resp_json)
             #response = await requests.request('GET', host + url, headers=self.headers)
             if resp.status != 200:
                 # TODO proper error handling
