@@ -75,6 +75,7 @@ class GateioConnector(Connector):
         print(params)
         await self._ws.send(json.dumps(params))
         
+        
         while True:
             try:
                 res = await asyncio.wait_for(self._ws.recv(), 30.)
