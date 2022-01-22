@@ -34,7 +34,7 @@ class KucoinConnector(Connector):
         print(type({unit.currency for unit in self.balance_list}))
         return {unit.currency for unit in self.balance_list}
 
-    def subscribe_ws(self):
+    async def subscribe_ws(self):
         self._ws = await websockets.connect(WS_URL)
         params = {
             "time": int(time.time()),
