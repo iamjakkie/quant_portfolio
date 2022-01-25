@@ -18,6 +18,8 @@ class GateioConnector(Connector):
         self.headers = auth.authenticate()
         self.balances = {}
         self.currencies = []
+        self.balanceUnits = []
+        self.balanceUnitsCurrencies = {}
         self._ws = None
 
     async def get_balance(self):
@@ -35,6 +37,8 @@ class GateioConnector(Connector):
         self.currencies = []
         for row in resp_json:
             unit = BalanceUnit('Gateio', ts, row['currency'], row['available'])
+            self.balanceUnits.append(unit)
+            self.balanceUnitsCurrencies[unit.currency] = unit
             self.currencies.append(unit.currency)
             self.balances[unit.currency] = float(unit.balance)
 

@@ -13,6 +13,9 @@ class BinanceConnector(Connector):
         self.currencies = []
         
     async def get_balance(self):
+        # self.client.get_account(self)
+        # res = await self._auth.client.get_account(self._auth)
+        # print(res)
         pass
 
     async def get_currencies(self):
@@ -22,4 +25,7 @@ class BinanceConnector(Connector):
         pass
 
     def get_value(self):
+        pass
+
+    def get_balance_units():
         pass

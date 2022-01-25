@@ -26,6 +26,10 @@ class Connector(ABC):
     def get_value():
         pass
 
+    @abstractmethod
+    def get_balance_units():
+        pass
+
 @dataclass
 class BalanceUnit(ABC):
     exchange: str
