@@ -1,7 +1,7 @@
-
-
+import pandas as pd
 from binance_authenticator import BinanceAuthenticator
 from base_model.connector import Connector, BalanceUnit
+from decimal import Decimal
 
 URL = ""
 
@@ -11,13 +11,22 @@ class BinanceConnector(Connector):
         self.client = auth.authenticate()
         self.balances = {}
         self.currencies = []
+        self.balance_units = []
+        self.balance_units_currencies = {}
+        self._ws = None
+
         
     async def get_balance(self):
-        print(type(self.client.get_account()))
-        # self.client.get_account(self)
-        # res = await self._auth.client.get_account(self._auth)
-        # print(res)
-        # pass
+        res = self.client.get_account()
+        self.balance_list = set()
+        for curr in res['balances']:
+            if(Decimal(curr['free']) > 0):
+                ts = pd.Timestamp.utcnow().replace(second=0, microsecond=0)
+                unit = BalanceUnit(ts, curr['asset'], curr['free'])
+                self.balance_units.append(unit)
+                self.balance_units_currencies[unit.currency] = unit 
+                self.currencies.append(unit.currency)
+                self.balances[unit.currency] = float(unit.balance)
 
     async def get_currencies(self):
         pass
