@@ -13,10 +13,11 @@ class BinanceConnector(Connector):
         self.currencies = []
         
     async def get_balance(self):
+        print(type(self.client.get_account()))
         # self.client.get_account(self)
         # res = await self._auth.client.get_account(self._auth)
         # print(res)
-        pass
+        # pass
 
     async def get_currencies(self):
         pass

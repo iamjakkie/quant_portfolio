@@ -9,6 +9,7 @@ from decimal import Decimal
 
 
 class Connector(ABC):
+    balances = {}
     
     @abstractmethod
     def get_balance():
@@ -32,7 +33,7 @@ class Connector(ABC):
 
 @dataclass
 class BalanceUnit(ABC):
-    exchange: str
+    # exchange: str
     timestamp: pd.Timestamp
     currency: str
     balance: Decimal

@@ -9,8 +9,8 @@ class BinanceAuthenticator(Authenticator):
         self.client = Client
 
     def authenticate(self):
-        self.client = Client(self.api_key, self.secret_key)
-        print(self.client.get_account())
+        return Client(self.api_key, self.secret_key)
+        # print(self.client.get_account())
 
 # def get_balance(api_key, api_secret):
 #     client = Client(api_key, api_secret)

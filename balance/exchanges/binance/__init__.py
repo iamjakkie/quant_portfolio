@@ -5,7 +5,7 @@ from binance_connector import BinanceConnector
 
 async def main():
     credentials = {}
-    with open('/workspaces/quant_earnings/balance/exchanges/gateio/credentials.txt', 'r') as creds:
+    with open('/workspaces/quant_earnings/balance/exchanges/binance/credentials.txt', 'r') as creds:
         for line in creds.readlines():
             key, value = line.split('=')
             credentials[key] = value.replace('\n', '')
