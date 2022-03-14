@@ -15,6 +15,7 @@ class CoinMarketCap(PriceProvider):
         }
         
     async def get_current_price(self, crypto):
+        #TODO: split
         map_parameters = {
             'symbol':crypto
         }
@@ -34,7 +35,8 @@ class CoinMarketCap(PriceProvider):
             resp = await client.get(self.url, headers=self.headers, params=parameters)
             resp_json = await resp.json()
         if resp.status != 200:
-            raise 'error'
+            print(resp)
+            raise resp
         else:
-            ts = pd.Timestamp.utcnow().replace(second=0, microsecond=0)
+            ts = pd.Timestamp.utcnow()#.replace(second=0, microsecond=0)
             return Price('coinmarketcap', ts, crypto, resp_json['data'][str(id)]['quote']['USD']['price'])

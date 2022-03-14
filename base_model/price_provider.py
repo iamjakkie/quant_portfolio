@@ -19,3 +19,6 @@ class Price(ABC):
     timestamp: pd.Timestamp
     currency: str
     USD: Decimal
+
+    def __repr__(self) -> str:
+        return f'Provider: {self.provider} at {self.timestamp} for {self.currency}:{self.USD:.4f}$'
