@@ -12,23 +12,23 @@ class Connector(ABC):
     balances = {}
     
     @abstractmethod
-    def get_balance():
+    def get_balance(self):
         pass
 
     @abstractmethod
-    def get_currencies():
+    def get_currencies(self):
         pass
 
     @abstractmethod
-    async def subscribe_ws() -> websockets.WebSocketClientProtocol:
+    async def subscribe_ws(self) -> websockets.WebSocketClientProtocol:
         pass
 
     @abstractmethod
-    def get_value():
+    def get_value(self):
         pass
 
     @abstractmethod
-    def get_balance_units():
+    def get_balance_units(self):
         pass
 
 @dataclass

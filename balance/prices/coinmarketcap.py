@@ -1,6 +1,8 @@
 import aiohttp
 import asyncio
 
+from base_model.price import PriceProvider
+
 async def get_current_price(api_key, crypto):
 
     url = 'https://pro-api.coinmarketcap.com/v1/cryptocurrency/quotes/latest'
