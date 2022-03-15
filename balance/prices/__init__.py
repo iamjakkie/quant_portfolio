@@ -12,15 +12,16 @@ async def main():
 
     coinmarketcap_provider = CoinMarketCap(credentials['api_key'])
     while(x < 121):
+        print(x)
         try:
-            doge = await coinmarketcap_provider.get_current_price('DOGE')
+            doge_id = await coinmarketcap_provider.get_mapping('DOGE')
+            doge = await coinmarketcap_provider.get_current_price(doge_id)
             print(doge)
             sleep(1)
         except Exception:
             await asyncio.sleep(5)
         finally:
             x+=1
-            print(x)
 
 if __name__ == '__main__':
     asyncio.get_event_loop().run_until_complete(main())

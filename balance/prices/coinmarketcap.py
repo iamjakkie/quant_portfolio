@@ -14,8 +14,7 @@ class CoinMarketCap(PriceProvider):
             'X-CMC_PRO_API_KEY':api_key
         }
         
-    async def get_current_price(self, crypto):
-        #TODO: split
+    async def get_mapping(self, crypto):
         map_parameters = {
             'symbol':crypto
         }
@@ -23,21 +22,21 @@ class CoinMarketCap(PriceProvider):
             resp = await client.get(self.map_url, headers=self.headers, params=map_parameters)
             resp_json = await resp.json()
         if resp.status != 200:
-            raise IOError(f"Error fetching current price for {crypto}",
+            raise IOError(f"Error fetching id for {crypto}",
                             f"HTTP status: {resp.status}")
-        id = resp_json['data'][0]['id']
-        
+        return resp_json['data'][0]['id']
+
+    async def get_current_price(self, id):
         parameters = {
             'id': id,
             'convert': 'USD'
         }
-        
         async with aiohttp.ClientSession() as client:
             resp = await client.get(self.url, headers=self.headers, params=parameters)
             resp_json = await resp.json()
         if resp.status != 200:
-            print(resp)
-            raise resp
+            raise IOError(f"Error fetching id for {id}",
+                            f"HTTP status: {resp.status}")
         else:
-            ts = pd.Timestamp.utcnow()#.replace(second=0, microsecond=0)
-            return Price('coinmarketcap', ts, crypto, resp_json['data'][str(id)]['quote']['USD']['price'])
+            ts = pd.Timestamp.utcnow()
+            return Price('coinmarketcap', ts, id, resp_json['data'][str(id)]['quote']['USD']['price'])

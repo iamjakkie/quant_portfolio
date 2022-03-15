@@ -15,7 +15,6 @@ class BinanceConnector(Connector):
         self.balance_units_currencies = {}
         self._ws = None
 
-        
     async def get_balance(self):
         res = self.client.get_account()
         self.balance_list = set()

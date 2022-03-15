@@ -14,6 +14,5 @@ async def main():
     binance_connector = BinanceConnector(auth)
     await binance_connector.get_balance()
 
-
 if __name__ == '__main__':
     asyncio.get_event_loop().run_until_complete(main())
