@@ -23,7 +23,8 @@ class CoinMarketCap(PriceProvider):
             resp = await client.get(self.map_url, headers=self.headers, params=map_parameters)
             resp_json = await resp.json()
         if resp.status != 200:
-            raise 'error'
+            raise IOError(f"Error fetching current price for {crypto}",
+                            f"HTTP status: {resp.status}")
         id = resp_json['data'][0]['id']
         
         parameters = {
