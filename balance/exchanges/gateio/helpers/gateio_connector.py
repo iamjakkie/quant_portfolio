@@ -6,8 +6,8 @@ import websockets
 import time
 import json
 
-from gateio_authenticator import GateioAuthenticator
-from base_model.connector import Connector, BalanceUnit
+from balance.exchanges.gateio.helpers.gateio_authenticator import GateioAuthenticator
+from base_model.exchange_helpers.connector import Connector, BalanceUnit
 
 WS_URL = "wss://api.gateio.ws/ws/v4/"
 SKIP_CURRENCIES = ['USDT']
@@ -33,35 +33,67 @@ class GateioConnector(Connector):
             # TODO proper error handling
             raise "error"
         #rows = response.json()
+        units = []
         ts = pd.Timestamp.utcnow().replace(second=0, microsecond=0)
         for row in resp_json:
-            unit = BalanceUnit('Gateio', ts, row['currency'], row['available'])
+            unit = BalanceUnit(ts, row['currency'], row['available'])
+            units.append(unit)
             self.balanceUnits.append(unit)
             self.balanceUnitsCurrencies[unit.currency] = unit
             self.currencies.append(unit.currency)
             self.balances[unit.currency] = float(unit.balance)
+        return units
 
     async def get_historical_trades(self):
         host = "https://api.gateio.ws"
         url = '/api/v4/spot/my_trades'
+        historical_trades = {}
         for currency in self.currencies:
+            if currency == 'USDT':
+                continue
             query_param = 'currency_pair={}_USDT'.format(currency)
             print(query_param)
             async with aiohttp.ClientSession() as client:
                 headers = {'Accept': 'application/json', 
                         'Content-Type': 'application/json'}
-                sign_headers = self._auth.gen_sign('GET', host + url, query_param)
-                headers.update(sign_headers)
-                resp = await client.get(host + url + "?" + query_param, headers=headers)
+                # sign_headers = self._auth.gen_sign('GET', host + url, query_param)
+                # headers.update(sign_headers)
+                resp = await client.get(host + url + "?" + query_param, headers=self.headers)
                 resp_json = await resp.json()
                 print(resp_json)
             #response = await requests.request('GET', host + url, headers=self.headers)
             if resp.status != 200:
                 # TODO proper error handling
-                raise "error"
+                print('chuj')
+            rows = []
             for row in resp_json:
-                print(row)
+                rows.append(row)
+            historical_trades[currency]=rows
+        return historical_trades
         
+    async def get_tickers(self):
+        host = "https://api.gateio.ws"
+        url = '/api/v4/spot/tickers'
+        last_tickers = {}
+        for currency in self.currencies:
+            if currency == 'USDT':
+                continue
+            currency_pair = f"currency_pair={currency}_USDT"
+            async with aiohttp.ClientSession() as client:
+                headers = {'Accept': 'application/json', 
+                        'Content-Type': 'application/json'}
+                # sign_headers = self._auth.gen_sign('GET', host + url, query_param)
+                # headers.update(sign_headers)
+                resp = await client.get(host + url + "?" + currency_pair, headers=headers)
+                resp_json = await resp.json()
+                if resp.status != 200:
+                    print(resp.text)
+                    return
+                last_tickers[currency] = resp_json
+        return last_tickers
+                
+
+
     def get_currencies(self):
         pass
 
@@ -117,4 +149,7 @@ class GateioConnector(Connector):
                 pass
 
     def get_value(self):
+        pass
+
+    def get_balance_units(self):
         pass

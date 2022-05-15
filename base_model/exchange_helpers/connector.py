@@ -31,3 +31,12 @@ class Connector(ABC):
     def get_balance_units(self):
         pass
 
+@dataclass
+class BalanceUnit(ABC):
+    # exchange: str
+    timestamp: pd.Timestamp
+    currency: str
+    balance: Decimal
+
+    def __repr__(self):
+        return '{}: Balance for {} in time {} is {}'.format(self.exchange, self.currency, self.timestamp, self.balance)

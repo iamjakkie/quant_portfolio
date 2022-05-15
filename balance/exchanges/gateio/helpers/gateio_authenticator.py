@@ -2,7 +2,7 @@ import time
 import hashlib
 import hmac
 
-from base_model.authenticator import Authenticator
+from base_model.exchange_helpers.authenticator import Authenticator
 
 class GateioAuthenticator(Authenticator):
     def __init__(self, api_key: str, secret_key: str):
