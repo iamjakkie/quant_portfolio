@@ -26,8 +26,9 @@ class GateIO(Exchange):
         last_tickers = await self._connector.get_tickers()
         self.last_tickers = last_tickers
 
-    async def get_wallet(self):
-        await self.get_balance()
+    async def get_wallet(self, refresh=True):
+        if refresh:
+            await self.get_balance()
         await self.get_tickers()
         for currency, balance in self.balances.items():
             # print(self.last_tickers.get(currency,[{'last':1}])[0]['last'])
