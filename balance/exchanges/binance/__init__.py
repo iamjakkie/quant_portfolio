@@ -1,7 +1,6 @@
 import asyncio
 
-from binance_authenticator import BinanceAuthenticator
-from binance_connector import BinanceConnector
+from balance.exchanges.binance.binance_client import Binance
 
 async def main():
     credentials = {}
@@ -10,9 +9,11 @@ async def main():
             key, value = line.split('=')
             credentials[key] = value.replace('\n', '')
     
-    auth = BinanceAuthenticator(credentials['api_key'], credentials['api_secret'])
-    binance_connector = BinanceConnector(auth)
-    await binance_connector.get_balance()
+    binance = Binance(credentials['api_key'], credentials['api_secret'])
+    await binance.get_balance()
+    for currency, balance in binance.balances.items():
+        print(f"{currency}: {float(balance):,.5f}")
+
 
 if __name__ == '__main__':
     asyncio.get_event_loop().run_until_complete(main())

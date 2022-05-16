@@ -1,6 +1,6 @@
 import pandas as pd
-from binance_authenticator import BinanceAuthenticator
-from base_model.connector import Connector, BalanceUnit
+from balance.exchanges.binance.helpers.binance_authenticator import BinanceAuthenticator
+from base_model.exchange_helpers.connector import Connector, BalanceUnit
 from decimal import Decimal
 
 URL = ""
@@ -18,6 +18,7 @@ class BinanceConnector(Connector):
     async def get_balance(self):
         res = self.client.get_account()
         self.balance_list = set()
+        units = []
         for curr in res['balances']:
             if(Decimal(curr['free']) > 0):
                 ts = pd.Timestamp.utcnow().replace(second=0, microsecond=0)
@@ -26,7 +27,12 @@ class BinanceConnector(Connector):
                 self.balance_units_currencies[unit.currency] = unit 
                 self.currencies.append(unit.currency)
                 self.balances[unit.currency] = float(unit.balance)
+                units.append(unit)
+        return units
 
+    async def get_tickers(self):
+        
+    
     async def get_currencies(self):
         pass
 

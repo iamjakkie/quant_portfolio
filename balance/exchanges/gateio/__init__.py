@@ -19,11 +19,17 @@ async def main():
     # await gateio.get_tickers()
     # for currency, last_ticker in gateio.last_tickers.items():
     #     print(f"{currency}: {last_ticker}")
+    counter = 0
     while True:
-        await gateio.get_wallet()
+        if counter % 10 == 0:
+            await gateio.get_wallet()
+        else:
+            await gateio.get_wallet(False)
         for currency, value in gateio.wallet.items():
             print(f"{currency}: {float(value):,.5f}")
-        await asyncio.wait_for()
+        print('======================')
+        counter += 1
+        # await asyncio.sleep(5)
     # await gateio.get_historical_trades()
     # for currency, trades in gateio.historical_trades.items():
     #     print(f"{currency}: {trades}")
