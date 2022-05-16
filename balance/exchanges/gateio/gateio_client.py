@@ -1,3 +1,4 @@
+import pandas as pd
 from base_model.exchange import Exchange
 from balance.exchanges.gateio.helpers.gateio_authenticator import GateioAuthenticator
 from balance.exchanges.gateio.helpers.gateio_connector import GateioConnector
@@ -33,6 +34,11 @@ class GateIO(Exchange):
         for currency, balance in self.balances.items():
             # print(self.last_tickers.get(currency,[{'last':1}])[0]['last'])
             self.wallet[currency] = float(self.last_tickers.get(currency,[{'last':1}])[0]['last'])*float(balance)
+
+        return {'exchange': [self]*len(self.wallet.keys()), 
+                'symbol': list(self.wallet.keys()), 
+                'amount': list(self.balances.values()), 
+                'value': list(self.wallet.values())}
 
     def __repr__(self) -> str:
         return 'GateIO'

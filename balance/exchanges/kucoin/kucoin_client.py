@@ -1,3 +1,4 @@
+import pandas as pd
 from base_model.exchange import Exchange
 from balance.exchanges.kucoin.helpers.kucoin_authenticator import KucoinAuthenticator
 from balance.exchanges.kucoin.helpers.kucoin_connector import KucoinConnector
@@ -33,6 +34,11 @@ class Kucoin(Exchange):
         for currency, balance in self.balances.items():
             # print(self.last_tickers.get(currency,[{'last':1}])[0]['last'])
             self.wallet[currency] = float(self.last_tickers.get(currency,1))*float(balance)
+
+        return {'exchange': [self]*len(self.wallet.keys()), 
+                'symbol': list(self.wallet.keys()), 
+                'amount': list(self.balances.values()), 
+                'value': list(self.wallet.values())}
 
     # async def print_wallet(self):
     #     for currency, value in self.wallet.items():
