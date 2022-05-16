@@ -23,12 +23,12 @@ async def main():
     res_df = await balances.get_wallets()
     counter = 0
     while True:
+        print(res_df)
         if counter % 10 == 0:
             df = await balances.get_wallets()
         else:
             df = await balances.get_wallets(False)
-        res_df = pd.concat(res_df, df)
-        print(res_df)
+        res_df = pd.concat([res_df, df])
         print('======================')
         counter += 1
 

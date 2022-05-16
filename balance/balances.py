@@ -23,14 +23,14 @@ class Balances():
             self.exchanges.append(self._exchanges_client_map[exchange](*[os.environ[key] for key in self._exchanges_req_map[exchange]]))
 
     async def get_wallets(self, refresh=True):
+        ts = pd.Timestamp.utcnow()
         for exchange in self.exchanges:
             wallet = await exchange.get_wallet(refresh)
-            ts = pd.Timestamp.utcnow()
             self.wallets['exchange']+=wallet['exchange']
             self.wallets['symbol']+=wallet['symbol']
             self.wallets['amount']+=wallet['amount']
             self.wallets['value']+=wallet['value']
-            self.wallets['timestamp']+=[ts]*len(wallet)
+            self.wallets['timestamp']+=[ts]*len(wallet['symbol'])
         return pd.DataFrame.from_dict(self.wallets)
             # self.wallets[exchange] = exchange.wallet
 
