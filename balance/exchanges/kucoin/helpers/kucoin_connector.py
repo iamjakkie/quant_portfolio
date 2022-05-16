@@ -5,12 +5,13 @@ import aiohttp
 import websockets
 from decimal import Decimal
 
-from kucoin_authenticator import KucoinAuthenticator
-from base_model.connector import Connector, BalanceUnit
+from balance.exchanges.kucoin.helpers.kucoin_authenticator import KucoinAuthenticator
+from base_model.exchange_helpers.connector import Connector, BalanceUnit
 
 class KucoinConnector(Connector):
     def __init__(self, auth: KucoinAuthenticator):
         self.headers = auth.authenticate()
+        self.currencies = []
 
     async def get_balance(self):
         url = 'https://api.kucoin.com/api/v1/accounts'
@@ -23,12 +24,28 @@ class KucoinConnector(Connector):
         rows = resp_json['data']
         ts = pd.Timestamp.utcnow().replace(second=0, microsecond=0)
         self.balance_list = set()
+        units = []
         for row in rows:
             if row['type'] == 'trade':
-                unit = BalanceUnit('Kucoin', ts, row['currency'], row['balance'])
+                unit = BalanceUnit(ts, row['currency'], row['balance'])
                 self.balance_list.add(unit.currency)
+                self.currencies.append(unit.currency)
+                units.append(unit)
 
-        return self.balance_list
+        return units
+
+    async def get_tickers(self):
+        url = 'https://api.kucoin.com/api/v1/prices'
+        query_param = f"currencies={','.join(currency for currency  in self.currencies if currency != 'USDT')}"
+        async with aiohttp.ClientSession() as client:
+            resp = await client.get(url + "?" + query_param)
+            resp_json = await resp.json()
+        return resp_json['data']
+
+
+
+    def get_balance_units(self):
+        return super().get_balance_units()
 
     def get_currencies(self):
         print(type({unit.currency for unit in self.balance_list}))

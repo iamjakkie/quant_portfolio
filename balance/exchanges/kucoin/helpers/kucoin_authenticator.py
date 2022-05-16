@@ -3,7 +3,7 @@ import base64
 import hmac
 import hashlib
 
-from base_model.authenticator import Authenticator
+from base_model.exchange_helpers.authenticator import Authenticator
 
 class KucoinAuthenticator(Authenticator):
     def __init__(self, api_key: str, api_secret: str, api_passphrase: str):
