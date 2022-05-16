@@ -10,7 +10,7 @@ class Kucoin(Exchange):
         self.balances = {}
         self.historical_trades = {}
         self.last_tickers = {}
-        self.wallet = []
+        self.wallet = {}
 
     async def get_balance(self):
         units = await self._connector.get_balance()
@@ -37,3 +37,6 @@ class Kucoin(Exchange):
     # async def print_wallet(self):
     #     for currency, value in self.wallet.items():
     #         print(f"{currency}: {float(value):,.5f}")
+
+    def __repr__(self) -> str:
+        return 'Kucoin'

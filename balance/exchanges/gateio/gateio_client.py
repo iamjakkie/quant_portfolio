@@ -33,3 +33,6 @@ class GateIO(Exchange):
         for currency, balance in self.balances.items():
             # print(self.last_tickers.get(currency,[{'last':1}])[0]['last'])
             self.wallet[currency] = float(self.last_tickers.get(currency,[{'last':1}])[0]['last'])*float(balance)
+
+    def __repr__(self) -> str:
+        return 'GateIO'

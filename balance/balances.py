@@ -13,7 +13,7 @@ class Balances():
         self._exchanges_req_map = {'binance': ['binance_api_key','binance_api_secret'],
                 'gateio': ['gateio_api_key', 'gateio_api_secret'],
                 'kucoin': ['kucoin_api_key', 'kucoin_api_secret', 'kucoin_api_passphrase']}
-        self.wallets = []
+        self.wallets = {}
         self.exchanges = []
         for exchange in exchanges:
             self.exchanges.append(self._exchanges_client_map[exchange](*[os.environ[key] for key in self._exchanges_req_map[exchange]]))
@@ -21,10 +21,18 @@ class Balances():
     async def get_wallets(self, refresh=True):
         for exchange in self.exchanges:
             await exchange.get_wallet(refresh)
-            self.wallets.append(exchange.wallet)
-    
+            self.wallets[exchange] = exchange.wallet
+
     async def print_wallets(self):
-        display(df)
+    #     display(df)
         # for exchange in self.exchanges:
+        #     balances = {}
         #     for currency, value in exchange.wallet.items():
-        #         print(f"{exchange}_{currency}: {float(value):,.5f}")
+        #         balances[currency] = float(value)
+        #         # print(f"{exchange}_{currency}: {float(value):,.5f}")
+        #     self.balances[exchange] = balances
+        df = pd.DataFrame(self.wallets)
+        print(df)
+        # for exchange, wallet in self.wallets.items():
+        #     for currency, value in wallet.items():
+        #         print(f"{exchange} = {currency}:{value:,.5f}")
