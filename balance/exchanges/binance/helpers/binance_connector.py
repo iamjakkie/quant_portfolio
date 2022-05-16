@@ -31,8 +31,26 @@ class BinanceConnector(Connector):
         return units
 
     async def get_tickers(self):
-        
-    
+        # print(self.client.get_all_tickers())
+        tickers = {}
+        for cryptocurrency in self.currencies:
+            if cryptocurrency in ['USDT', 'BUSD']:
+                continue
+            if cryptocurrency == 'LUNA':
+                res = self.client.get_avg_price(symbol=f"{cryptocurrency}BUSD")
+                price = res['price']
+            else:
+                try:
+                    res = self.client.get_avg_price(symbol=f"{cryptocurrency}USDT")
+                    price = res['price']
+                    # print(f"{cryptocurrency}:{res['price']}")
+                except Exception as e:
+                    res = self.client.get_avg_price(symbol=f"BUSD{cryptocurrency}")
+                    price = 1/float(res['price'])
+                    # print(f"{cryptocurrency}:{res['price']}")
+            tickers[cryptocurrency] = price
+        return tickers
+
     async def get_currencies(self):
         pass
 

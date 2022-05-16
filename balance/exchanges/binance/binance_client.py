@@ -23,8 +23,8 @@ class Binance(Exchange):
     #         self.historical_trades[currency]=trades
 
     async def get_tickers(self):
-        last_tickers = await self._connector.get_tickers()
-        self.last_tickers = last_tickers
+        self.last_tickers = await self._connector.get_tickers()
+        # self.last_tickers = last_tickers
 
     async def get_wallet(self, refresh=True):
         if refresh:
@@ -32,4 +32,4 @@ class Binance(Exchange):
         await self.get_tickers()
         for currency, balance in self.balances.items():
             # print(self.last_tickers.get(currency,[{'last':1}])[0]['last'])
-            self.wallet[currency] = float(self.last_tickers.get(currency,[{'last':1}])[0]['last'])*float(balance)
+            self.wallet[currency] = float(self.last_tickers.get(currency,1))*float(balance)
