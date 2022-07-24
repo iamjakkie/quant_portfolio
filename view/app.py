@@ -1,16 +1,31 @@
-import dash
-import dash_html_components as html
+from dash import Dash, dcc, html, Input, Output
+from threading import Thread
+import plotly.express as px
+import asyncio
 
 from balance.balances import Balances
 
 
-app = dash.Dash(__name__)
-
 balances = Balances(['binance', 'gateio', 'kucoin'])
-await balances.get_wallets()
+df = asyncio.run(balances.get_wallets())
+app = Dash(__name__)
+
 app.layout = html.Div([
-    html.H1('Hello motherfucker')
+    html.H4('Crypto stuff'),
+    dcc.Dropdown(id='exchange_dropdown',
+                value='Binance',
+                options=[{'label': exchange, 'value': exchange} for exchange in ['Binance', 'Kucoin', 'GateIO']]),
+    dcc.Graph(id='crypto-chart')
 ])
+
+@app.callback(
+    Output('crypto-chart', 'figure'),
+    Input('exchange_dropdown', 'value')
+)
+def display_chart(exchange):
+    df=df[df['exchange']==exchange]
+    fig = px.line(df, x='timestamp', y='value')
+    return fig
 
 if __name__ == '__main__':
     app.run_server(debug=True)
