@@ -4,12 +4,12 @@ from balance.balances import Balances
 
 async def main():
     credentials = {}
-    with open('/workspaces/quant_earnings/balance/exchanges/kucoin/credentials.txt', 'r') as creds:
-        for line in creds.readlines():
-            key, value = line.split('=')
-            credentials[key] = value.replace('\n', '')
+    # with open('/workspaces/quant_earnings/balance/exchanges/kucoin/credentials.txt', 'r') as creds:
+    #     for line in creds.readlines():
+    #         key, value = line.split('=')
+    #         credentials[key] = value.replace('\n', '')
 
-    balances = Balances(['binance', 'gateio', 'kucoin'])
+    balances = Balances(['kucoin'])
 
     # await kucoin.get_balance()
     # for currency, balance in kucoin.balances.items():

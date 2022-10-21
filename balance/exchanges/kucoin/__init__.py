@@ -1,15 +1,16 @@
 import asyncio
+import os
 
 from balance.exchanges.kucoin.kucoin_client import Kucoin
 
 async def main():
     credentials = {}
-    with open('/workspaces/quant_earnings/balance/exchanges/kucoin/credentials.txt', 'r') as creds:
-        for line in creds.readlines():
-            key, value = line.split('=')
-            credentials[key] = value.replace('\n', '')
 
-    kucoin = Kucoin(credentials['api_key'], credentials['api_secret'], credentials['api_passphrase'])
+    api_key = os.environ["kucoin_api_key"]
+    api_secret = os.environ["kucoin_api_secret"]
+    api_passphrase = os.environ["kucoin_api_passphrase"]
+
+    kucoin = Kucoin(api_key, api_secret, api_passphrase)
 
     # await kucoin.get_balance()
     # for currency, balance in kucoin.balances.items():

@@ -21,6 +21,7 @@ class BinanceConnector(Connector):
         units = []
         for curr in res['balances']:
             if(Decimal(curr['free']) > 0):
+                print(curr)
                 ts = pd.Timestamp.utcnow().replace(second=0, microsecond=0)
                 unit = BalanceUnit(ts, curr['asset'], curr['free'])
                 self.balance_units.append(unit)
@@ -34,17 +35,18 @@ class BinanceConnector(Connector):
         # print(self.client.get_all_tickers())
         tickers = {}
         for cryptocurrency in self.currencies:
-            if cryptocurrency in ['USDT', 'BUSD']:
+            if cryptocurrency not in ['ETH', 'BTC']:
                 continue
-            if cryptocurrency == 'LUNA':
-                res = self.client.get_avg_price(symbol=f"{cryptocurrency}BUSD")
-                price = res['price']
+            # if cryptocurrency == 'LUNA':
+            #     res = self.client.get_avg_price(symbol=f"{cryptocurrency}BUSD")
+            #     price = res['price']
             else:
                 try:
                     res = self.client.get_avg_price(symbol=f"{cryptocurrency}USDT")
                     price = res['price']
                     # print(f"{cryptocurrency}:{res['price']}")
                 except Exception as e:
+                    print(cryptocurrency)
                     res = self.client.get_avg_price(symbol=f"BUSD{cryptocurrency}")
                     price = 1/float(res['price'])
                     # print(f"{cryptocurrency}:{res['price']}")

@@ -5,9 +5,6 @@ import asyncio
 
 from balance.balances import Balances
 
-
-balances = Balances(['binance', 'gateio', 'kucoin'])
-df = asyncio.run(balances.get_wallets())
 app = Dash(__name__)
 
 app.layout = html.Div([
@@ -23,6 +20,8 @@ app.layout = html.Div([
     Input('exchange_dropdown', 'value')
 )
 def display_chart(exchange):
+    balances = Balances(['binance', 'gateio', 'kucoin'])
+    df = asyncio.run(balances.get_wallets())
     df=df[df['exchange']==exchange]
     fig = px.line(df, x='timestamp', y='value')
     return fig
