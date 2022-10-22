@@ -20,15 +20,22 @@ async def main():
     #     print(f"{currency}: {float(price):,.5f}")
     
     # await balances.print_wallets()
-    res_df = await balances.get_wallets()
+    # res_df = await balances.get_wallets()
+    res = await balances.get_wallets()
+    print(res)
+    total = await balances.get_wallet_total()
+    print(total)
+    return
     counter = 0
     while True:
-        print(res_df)
+        print(res)
         if counter % 10 == 0:
-            df = await balances.get_wallets()
+            # df = await balances.get_wallets()
+            res = await balances.get_wallets()
         else:
-            df = await balances.get_wallets(False)
-        res_df = pd.concat([res_df, df])
+            # df = await balances.get_wallets(False)
+            res = await balances.get_wallets(False)
+        # res_df = pd.concat([res_df, df])
         print('======================')
         counter += 1
 

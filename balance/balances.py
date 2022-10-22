@@ -18,6 +18,7 @@ class Balances():
                         'amount': [],
                         'value': [],
                         'timestamp': []}
+        self.totals = {}
         self.exchanges = []
         for exchange in exchanges:
             self.exchanges.append(self._exchanges_client_map[exchange](*[os.environ[key] for key in self._exchanges_req_map[exchange]]))
@@ -31,8 +32,14 @@ class Balances():
             self.wallets['amount']+=wallet['amount']
             self.wallets['value']+=wallet['value']
             self.wallets['timestamp']+=[ts]*len(wallet['symbol'])
-        return pd.DataFrame.from_dict(self.wallets)
-            # self.wallets[exchange] = exchange.wallet
+        # return pd.DataFrame.from_dict(self.wallets)
+            # self.wallets[exchange] = exchange.walle
+        return self.wallets
+
+    async def get_wallet_total(self):
+        for exchange in self.exchanges:
+            self.totals[exchange] = await exchange.get_total()
+        return self.totals
 
     # async def print_wallets(self):
     # #     display(df)
