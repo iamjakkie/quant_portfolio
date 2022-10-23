@@ -43,12 +43,13 @@ class BinanceConnector(Connector):
             else:
                 try:
                     res = self.client.get_avg_price(symbol=f"{cryptocurrency}USDT")
+                    print(res)
                     price = res['price']
                     # print(f"{cryptocurrency}:{res['price']}")
                 except Exception as e:
                     print(cryptocurrency)
-                    res = self.client.get_avg_price(symbol=f"BUSD{cryptocurrency}")
-                    price = 1/float(res['price'])
+                    res = self.client.get_avg_price(symbol=f"USDT{cryptocurrency}")
+                    price = float(1/res['price'])
                     # print(f"{cryptocurrency}:{res['price']}")
             tickers[cryptocurrency] = price
         return tickers
