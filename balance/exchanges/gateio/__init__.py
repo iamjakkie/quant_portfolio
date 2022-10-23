@@ -2,16 +2,15 @@ import asyncio
 
 # from gateio_authenticator import GateioAuthenticator
 # from gateio_connector import GateioConnector
+import os
+
 from balance.exchanges.gateio.gateio_client import GateIO
 
 async def main():
-    credentials = {}
-    with open('/workspaces/quant_earnings/balance/exchanges/gateio/credentials.txt', 'r') as creds:
-        for line in creds.readlines():
-            key, value = line.split('=')
-            credentials[key] = value.replace('\n', '')
+    api_key=os.environ["gateio_api_key"]
+    api_secret=os.environ["gateio_api_secret"]
 
-    gateio = GateIO(credentials['api_key'], credentials['api_secret'])
+    gateio = GateIO(api_key, api_secret)
     # await gateio.get_balance()
     # for currency, balance in gateio.balances.items():
     #     print(f"{currency}: {float(balance):,.5f}")

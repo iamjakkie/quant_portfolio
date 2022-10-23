@@ -9,7 +9,7 @@ async def main():
     #         key, value = line.split('=')
     #         credentials[key] = value.replace('\n', '')
 
-    balances = Balances(['kucoin'])
+    balances = Balances(['kucoin', 'gateio', 'binance'])
 
     # await kucoin.get_balance()
     # for currency, balance in kucoin.balances.items():
@@ -21,9 +21,9 @@ async def main():
     
     # await balances.print_wallets()
     # res_df = await balances.get_wallets()
-    res = await balances.get_wallets()
-    print(res)
-    total = await balances.get_wallet_total()
+    # res = await balances.get_wallets()
+    # print(res)
+    total = await balances.get_wallets_total()
     print(total)
     return
     counter = 0

@@ -1,15 +1,13 @@
 import asyncio
+import os
 
 from balance.exchanges.binance.binance_client import Binance
 
 async def main():
-    credentials = {}
-    with open('/workspaces/quant_earnings/balance/exchanges/binance/credentials.txt', 'r') as creds:
-        for line in creds.readlines():
-            key, value = line.split('=')
-            credentials[key] = value.replace('\n', '')
+    api_key=os.environ["binance_api_key"]
+    api_secret=os.environ["binance_api_secret"]
     
-    binance = Binance(credentials['api_key'], credentials['api_secret'])
+    binance = Binance(api_key, api_secret)
     # await binance.get_balance()
     # for currency, balance in binance.balances.items():
     #     print(f"{currency}: {float(balance):,.5f}")

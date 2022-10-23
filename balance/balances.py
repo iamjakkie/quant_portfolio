@@ -36,7 +36,7 @@ class Balances():
             # self.wallets[exchange] = exchange.walle
         return self.wallets
 
-    async def get_wallet_total(self):
+    async def get_wallets_total(self):
         for exchange in self.exchanges:
             self.totals[exchange] = await exchange.get_total()
         return self.totals
