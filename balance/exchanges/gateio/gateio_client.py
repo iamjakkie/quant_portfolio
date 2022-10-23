@@ -33,12 +33,18 @@ class GateIO(Exchange):
         await self.get_tickers()
         for currency, balance in self.balances.items():
             # print(self.last_tickers.get(currency,[{'last':1}])[0]['last'])
-            self.wallet[currency] = float(self.last_tickers.get(currency,[{'last':1}])[0]['last'])*float(balance)
+            value = float(self.last_tickers.get(currency,[{'last':1}])[0]['last'])*float(balance)
+            if value > 1.0:
+                self.wallet[currency] = value
 
         return {'exchange': [self]*len(self.wallet.keys()), 
                 'symbol': list(self.wallet.keys()), 
                 'amount': list(self.balances.values()), 
                 'value': list(self.wallet.values())}
+
+    async def get_total(self):
+        all_assets = await self.get_wallet()
+        return sum(all_assets["value"])
 
     def __repr__(self) -> str:
         return 'GateIO'
