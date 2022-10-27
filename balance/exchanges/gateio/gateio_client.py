@@ -42,8 +42,8 @@ class GateIO(Exchange):
                 'amount': list(self.balances.values()), 
                 'value': list(self.wallet.values())}
 
-    async def get_total(self):
-        all_assets = await self.get_wallet()
+    async def get_total(self, refresh=True):
+        all_assets = await self.get_wallet(refresh)
         return sum(all_assets["value"])
 
     def __repr__(self) -> str:

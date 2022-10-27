@@ -1,4 +1,6 @@
 import asyncio
+import time
+
 import pandas as pd
 from balance.balances import Balances
 
@@ -23,8 +25,15 @@ async def main():
     # res_df = await balances.get_wallets()
     # res = await balances.get_wallets()
     # print(res)
-    total = await balances.get_wallets_total()
-    print(total)
+    counter = 0
+    while True:
+        if counter % 10 == 0:
+            total = await balances.get_wallets_total()
+        else:
+            total = await balances.get_wallets_total(False)
+        print(total)
+        time.sleep(2)
+        counter+=1
     return
     counter = 0
     while True:

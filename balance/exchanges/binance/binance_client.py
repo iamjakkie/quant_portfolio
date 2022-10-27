@@ -28,6 +28,7 @@ class Binance(Exchange):
         # self.last_tickers = last_tickers
 
     async def get_wallet(self, refresh=True):
+        #todo if there is no refresh - get the last currencies list
         if refresh:
             await self.get_balance()
         await self.get_tickers()
@@ -41,8 +42,8 @@ class Binance(Exchange):
                 'amount': list(self.balances.values()), 
                 'value': list(self.wallet.values())}
 
-    async def get_total(self):
-        all_assets = await self.get_wallet()
+    async def get_total(self, refresh=True):
+        all_assets = await self.get_wallet(refresh)
         return sum(all_assets["value"])
 
     def __repr__(self) -> str:
