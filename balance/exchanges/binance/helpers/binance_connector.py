@@ -35,22 +35,23 @@ class BinanceConnector(Connector):
         # print(self.client.get_all_tickers())
         tickers = {}
         for cryptocurrency in self.currencies:
-            if cryptocurrency not in ['ETH', 'BTC']:
-                continue
             # if cryptocurrency == 'LUNA':
             #     res = self.client.get_avg_price(symbol=f"{cryptocurrency}BUSD")
             #     price = res['price']
-            else:
+            if cryptocurrency in ["USDT", "USDC", "BUSDT", "USTC"]:
+                continue
+            try:
+                res = self.client.get_avg_price(symbol=f"{cryptocurrency}USDT")
+                print(res)
+                price = res['price']
+                # print(f"{cryptocurrency}:{res['price']}")
+            except Exception as e:
                 try:
-                    res = self.client.get_avg_price(symbol=f"{cryptocurrency}USDT")
-                    print(res)
-                    price = res['price']
-                    # print(f"{cryptocurrency}:{res['price']}")
-                except Exception as e:
-                    print(cryptocurrency)
                     res = self.client.get_avg_price(symbol=f"USDT{cryptocurrency}")
-                    price = float(1/res['price'])
-                    # print(f"{cryptocurrency}:{res['price']}")
+                    price = float(1/float(res['price']))
+                except Exception as ee:
+                    price = 0
+                # print(f"{cryptocurrency}:{res['price']}")
             tickers[cryptocurrency] = price
         return tickers
 
@@ -63,5 +64,5 @@ class BinanceConnector(Connector):
     def get_value(self):
         pass
 
-    def get_balance_units():
+    def get_balance_units(self):
         pass
