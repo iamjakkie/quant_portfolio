@@ -25,8 +25,6 @@ class Binance(Exchange):
 
     async def get_tickers(self):
         self.last_tickers = await self._connector.get_tickers()
-        print('tickers')
-        print(self.last_tickers)
         # self.last_tickers = last_tickers
 
     async def get_wallet(self, refresh=True):
@@ -35,7 +33,6 @@ class Binance(Exchange):
         await self.get_tickers()
         for currency, balance in self.balances.items():
             # print(self.last_tickers.get(currency,[{'last':1}])[0]['last'])
-            print(f"currency: {currency}, balance: {balance}, ticker: {self.last_tickers.get(currency,1)}")
             value = float(self.last_tickers.get(currency, 1))*float(balance)
             if value > 1.0:
                 self.wallet[currency] = value

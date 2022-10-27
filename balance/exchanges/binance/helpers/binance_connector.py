@@ -21,7 +21,6 @@ class BinanceConnector(Connector):
         units = []
         for curr in res['balances']:
             if(Decimal(curr['free']) > 0):
-                print(curr)
                 ts = pd.Timestamp.utcnow().replace(second=0, microsecond=0)
                 unit = BalanceUnit(ts, curr['asset'], curr['free'])
                 self.balance_units.append(unit)
@@ -42,7 +41,6 @@ class BinanceConnector(Connector):
                 continue
             try:
                 res = self.client.get_avg_price(symbol=f"{cryptocurrency}USDT")
-                print(res)
                 price = res['price']
                 # print(f"{cryptocurrency}:{res['price']}")
             except Exception as e:
