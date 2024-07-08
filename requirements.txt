@@ -1,7 +1,0 @@
-pandas
-aiohttp
-websockets
-requests
-dataclasses
-python-binance
-dash
