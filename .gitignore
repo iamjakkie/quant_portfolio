@@ -5,3 +5,6 @@ __pycache__
 .idea
 dash_project/
 setup.sh
+.venv
+test.py
+node_modules
