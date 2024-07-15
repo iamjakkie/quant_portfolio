@@ -10,6 +10,7 @@ class BinanceClient():
         raw_assets = self.connector.get_account()["balances"]
         for raw_asset in raw_assets:
             if float(raw_asset['free']) > 0:
+                print(raw_asset)
                 bu = BalanceUnit(
                     datetime.now(),
                     raw_asset['asset'],
