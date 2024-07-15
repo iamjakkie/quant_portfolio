@@ -1,5 +1,5 @@
 from binance import Client 
-from FEEDER.BASE_MODEL.authenticator import Authenticator
+from BASE_MODEL.authenticator import Authenticator
 
 class BinanceAuthenticator(Authenticator):
     def __init__(self, api_key: str, secret_key: str):
