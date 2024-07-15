@@ -1,11 +1,9 @@
-from CEFI.binance.helpers.binance_authenticator import BinanceAuthenticator
-from CEFI.binance.helpers.binance_connector import BinanceConnector
+from CEFI.binance.binance_client import BinanceClient
 import os
 
 def main():
-    auth = BinanceAuthenticator(os.getenv("BINANCE_API_KEY"), os.getenv("BINANCE_SECRET_KEY"))
-    connector = BinanceConnector(auth)
-    print(connector.get_account())
+    binance_client = BinanceClient(os.getenv("BINANCE_API_KEY"), os.getenv("BINANCE_SECRET_KEY"))
+    print(binance_client.get_balance())
 
 if __name__ == "__main__":
     main()

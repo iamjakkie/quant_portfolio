@@ -6,13 +6,12 @@ from typing import List
 
 @dataclass
 class BalanceUnit(ABC):
-    # exchange: str
     timestamp: datetime
     currency: str
     balance: Decimal
 
     def __repr__(self):
-        return '{}: Balance for {} in time {} is {}'.format(self.exchange, self.currency, self.timestamp, self.balance)
+        return 'Balance for {} in time {} is {}'.format(self.currency, self.timestamp, self.balance)
     
 @dataclass
 class ExchangeBalance:
