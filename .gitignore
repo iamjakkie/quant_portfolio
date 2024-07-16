@@ -8,3 +8,5 @@ setup.sh
 .venv
 test.py
 node_modules
+.env
+FEEDER/cdp_api_key.json

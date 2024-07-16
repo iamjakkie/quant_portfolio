@@ -10,14 +10,14 @@ class CoinbaseAuthenticator(Authenticator):
         self.__key_name = key_name
         self.__key_secret = key_secret
 
-    def authenticate(self, uri:str, method:str="GET"):
+    def authenticate(self, uri:str):
         private_key_bytes = self.__key_secret.encode('utf-8')
         private_key = serialization.load_pem_private_key(private_key_bytes, password=None)
         jwt_payload = {
             'sub': self.__key_name,
             'iss': 'cdp',
             'nbf': int(time.time()),
-            'exp': int(time.time()) + 30,
+            'exp': int(time.time()) + 120,
             'uri': uri,
         }
         jwt_token = jwt.encode(
