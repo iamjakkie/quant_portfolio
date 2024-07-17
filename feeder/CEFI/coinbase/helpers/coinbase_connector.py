@@ -26,19 +26,20 @@ class CoinbaseConnector(Connector):
     #         async with session.request(method, url, headers=header, data=body) as response:
     #             return await response.json(content_type=None)
 
-    async def get_response(self, path: str, method:str = "GET", header=""):
+    async def get_response(self, path: str, method:str = "GET"):
         uri = f"{method} {BASE_URL}{path}".replace("https://" , "")
         url = f"{BASE_URL}{path}"
-        if not header:
-            header = self.__get_headers(uri=uri)
+        print('get header')
+        header = self.__get_headers(uri=uri)
         print(header)
+        print(url)
         async with aiohttp.ClientSession(headers=header, timeout=None) as client:
             res = await client.get(url)
             await asyncio.sleep(0.001)
             while res.status != 200:
+                print(res.text)
                 if res.status == 401:
                     print(res.text)
-                    print(res.request_info)
                     header = self.__get_headers(uri=uri)
                     client = aiohttp.ClientSession(headers=header)
                 await asyncio.sleep(5)
