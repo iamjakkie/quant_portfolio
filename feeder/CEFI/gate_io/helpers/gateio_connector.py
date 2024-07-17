@@ -21,14 +21,9 @@ class GateIOConnector(Connector):
     async def get_response(self, path:str):
         uri = f"/api/v4{path}"
         url = f"{BASE_URL}{path}"
-        print('get header')
-        print(uri)
         header = self.__get_headers(uri=uri)
-        print(header)
-        print(url)
         async with aiohttp.ClientSession(headers=header, timeout=None) as client:
             res = await client.get(url)
-            print(res.text)
             print(await res.json())
             await asyncio.sleep(0.001)
             while res.status != 200:

@@ -7,19 +7,21 @@ class BinanceClient():
         self.connector = BinanceConnector(api_key, secret_key)
 
     def _get_balance(self):
+        balances = []
         raw_assets = self.connector.get_account()["balances"]
         for raw_asset in raw_assets:
             if float(raw_asset['free']) > 0:
-                print(raw_asset)
                 bu = BalanceUnit(
                     datetime.now(),
                     raw_asset['asset'],
                     float(raw_asset['free'])
                 )
-                yield ExchangeBalance(
+                balances.append(ExchangeBalance(
                     'BINANCE',
                     bu
-                )
+                ))
+        return balances
+
 
     def get_balance(self):
         return list(self._get_balance())

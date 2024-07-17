@@ -29,10 +29,7 @@ class CoinbaseConnector(Connector):
     async def get_response(self, path: str, method:str = "GET"):
         uri = f"{method} {BASE_URL}{path}".replace("https://" , "")
         url = f"{BASE_URL}{path}"
-        print('get header')
         header = self.__get_headers(uri=uri)
-        print(header)
-        print(url)
         async with aiohttp.ClientSession(headers=header, timeout=None) as client:
             res = await client.get(url)
             await asyncio.sleep(0.001)
